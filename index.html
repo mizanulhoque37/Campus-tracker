@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADTU ConversationalAI Platform - Botpress-like Enterprise Solution</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <!-- Platform Container -->
+    <div class="platform-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="platform-logo">
+                    <div class="logo-icon">🤖</div>
+                    <div class="logo-text">
+                        <h3>ADTU AI Platform</h3>
+                        <span>Enterprise Edition</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-menu">
+                <div class="nav-section">
+                    <span class="nav-section-title">Main</span>
+                    <div class="nav-item active" data-view="dashboard">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Dashboard</span>
+                    </div>
+                    <div class="nav-item" data-view="flow-builder">
+                        <span class="nav-icon">🔀</span>
+                        <span class="nav-label">Flow Builder</span>
+                    </div>
+                    <div class="nav-item" data-view="analytics">
+                        <span class="nav-icon">📈</span>
+                        <span class="nav-label">Analytics</span>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">Content</span>
+                    <div class="nav-item" data-view="content-management">
+                        <span class="nav-icon">📝</span>
+                        <span class="nav-label">Content Manager</span>
+                    </div>
+                    <div class="nav-item" data-view="knowledge-base">
+                        <span class="nav-icon">📚</span>
+                        <span class="nav-label">Knowledge Base</span>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">Tools</span>
+                    <div class="nav-item" data-view="testing">
+                        <span class="nav-icon">🧪</span>
+                        <span class="nav-label">Bot Testing</span>
+                    </div>
+                    <div class="nav-item" data-view="live-chat">
+                        <span class="nav-icon">💬</span>
+                        <span class="nav-label">Live Chat</span>
+                    </div>
+                    <div class="nav-item" data-view="integrations">
+                        <span class="nav-icon">🔗</span>
+                        <span class="nav-label">Integrations</span>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">Settings</span>
+                    <div class="nav-item" data-view="settings">
+                        <span class="nav-icon">⚙️</span>
+                        <span class="nav-label">Settings</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">A</div>
+                    <div class="user-details">
+                        <span class="user-name">Admin User</span>
+                        <span class="user-role">Platform Administrator</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="platform-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle" id="sidebarToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <div class="breadcrumb">
+                        <span class="breadcrumb-item active" id="currentView">Dashboard</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-actions">
+                        <button class="btn btn--outline btn--sm" onclick="testBot()">
+                            <span>🧪</span>
+                            Test Bot
+                        </button>
+                        <button class="btn btn--primary btn--sm" onclick="publishBot()">
+                            <span>🚀</span>
+                            Publish
+                        </button>
+                    </div>
+                    <div class="bot-status">
+                        <div class="status-indicator active"></div>
+                        <span>Bot Active</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- View Container -->
+            <div class="view-container" id="viewContainer">
+                
+                <!-- Dashboard View -->
+                <div class="view active" id="dashboard-view">
+                    <div class="dashboard-grid">
+                        <div class="dashboard-section">
+                            <h2>Platform Overview</h2>
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <div class="metric-icon">💬</div>
+                                    <div class="metric-content">
+                                        <h3>1,247</h3>
+                                        <p>Total Conversations</p>
+                                        <span class="metric-change positive">+12% this week</span>
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-icon">🎯</div>
+                                    <div class="metric-content">
+                                        <h3>94.2%</h3>
+                                        <p>Intent Accuracy</p>
+                                        <span class="metric-change positive">+2.1% improvement</span>
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-icon">⚡</div>
+                                    <div class="metric-content">
+                                        <h3>1.2s</h3>
+                                        <p>Avg Response Time</p>
+                                        <span class="metric-change neutral">No change</span>
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-icon">😊</div>
+                                    <div class="metric-content">
+                                        <h3>4.6/5</h3>
+                                        <p>User Satisfaction</p>
+                                        <span class="metric-change positive">+0.2 this month</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-section">
+                            <div class="section-header">
+                                <h3>Conversation Trends</h3>
+                                <select class="form-control" style="width: 150px;">
+                                    <option>Last 7 days</option>
+                                    <option>Last 30 days</option>
+                                    <option>Last 3 months</option>
+                                </select>
+                            </div>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="conversationChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-section">
+                            <h3>Recent Activity</h3>
+                            <div class="activity-feed">
+                                <div class="activity-item">
+                                    <div class="activity-icon">👤</div>
+                                    <div class="activity-content">
+                                        <p><strong>New user</strong> started conversation about hostel accommodation</p>
+                                        <span class="activity-time">2 minutes ago</span>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">🔄</div>
+                                    <div class="activity-content">
+                                        <p><strong>Flow updated:</strong> Admission Inquiry Flow v2.1</p>
+                                        <span class="activity-time">15 minutes ago</span>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">📊</div>
+                                    <div class="activity-content">
+                                        <p><strong>Analytics report</strong> generated for placement queries</p>
+                                        <span class="activity-time">1 hour ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-section">
+                            <h3>Popular Intents</h3>
+                            <div class="intent-list">
+                                <div class="intent-item">
+                                    <span class="intent-name">academic.registration</span>
+                                    <div class="intent-stats">
+                                        <span class="intent-confidence">98% confidence</span>
+                                        <span class="intent-count">234 queries</span>
+                                    </div>
+                                </div>
+                                <div class="intent-item">
+                                    <span class="intent-name">fees.payment</span>
+                                    <div class="intent-stats">
+                                        <span class="intent-confidence">94% confidence</span>
+                                        <span class="intent-count">187 queries</span>
+                                    </div>
+                                </div>
+                                <div class="intent-item">
+                                    <span class="intent-name">hostel.accommodation</span>
+                                    <div class="intent-stats">
+                                        <span class="intent-confidence">92% confidence</span>
+                                        <span class="intent-count">156 queries</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flow Builder View -->
+                <div class="view" id="flow-builder-view">
+                    <div class="flow-builder-container">
+                        <div class="flow-toolbar">
+                            <div class="toolbar-group">
+                                <button class="btn btn--outline btn--sm" onclick="createNewFlow()">
+                                    <span>➕</span> New Flow
+                                </button>
+                                <button class="btn btn--outline btn--sm" onclick="saveFlow()">
+                                    <span>💾</span> Save
+                                </button>
+                                <button class="btn btn--outline btn--sm" onclick="exportFlow()">
+                                    <span>📤</span> Export
+                                </button>
+                            </div>
+                            <div class="toolbar-group">
+                                <select class="form-control">
+                                    <option>Admission Inquiry Flow</option>
+                                    <option>Campus Information Flow</option>
+                                    <option>Placement Guidance Flow</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flow-workspace">
+                            <div class="node-palette">
+                                <h4>Node Palette</h4>
+                                <div class="node-categories">
+                                    <div class="node-category">
+                                        <h5>Entry Points</h5>
+                                        <div class="node-item" draggable="true" data-node-type="start">
+                                            <span class="node-icon">🚀</span>
+                                            <span>Start</span>
+                                        </div>
+                                    </div>
+                                    <div class="node-category">
+                                        <h5>Messages</h5>
+                                        <div class="node-item" draggable="true" data-node-type="message">
+                                            <span class="node-icon">💬</span>
+                                            <span>Text Message</span>
+                                        </div>
+                                        <div class="node-item" draggable="true" data-node-type="card">
+                                            <span class="node-icon">🎴</span>
+                                            <span>Rich Card</span>
+                                        </div>
+                                        <div class="node-item" draggable="true" data-node-type="carousel">
+                                            <span class="node-icon">🎠</span>
+                                            <span>Carousel</span>
+                                        </div>
+                                        <div class="node-item" draggable="true" data-node-type="quick-replies">
+                                            <span class="node-icon">⚡</span>
+                                            <span>Quick Replies</span>
+                                        </div>
+                                    </div>
+                                    <div class="node-category">
+                                        <h5>Input & Logic</h5>
+                                        <div class="node-item" draggable="true" data-node-type="input">
+                                            <span class="node-icon">⌨️</span>
+                                            <span>User Input</span>
+                                        </div>
+                                        <div class="node-item" draggable="true" data-node-type="condition">
+                                            <span class="node-icon">🔀</span>
+                                            <span>Condition</span>
+                                        </div>
+                                        <div class="node-item" draggable="true" data-node-type="action">
+                                            <span class="node-icon">⚡</span>
+                                            <span>Custom Action</span>
+                                        </div>
+                                    </div>
+                                    <div class="node-category">
+                                        <h5>Integrations</h5>
+                                        <div class="node-item" draggable="true" data-node-type="api">
+                                            <span class="node-icon">🔗</span>
+                                            <span>API Call</span>
+                                        </div>
+                                        <div class="node-item" draggable="true" data-node-type="database">
+                                            <span class="node-icon">🗄️</span>
+                                            <span>Database</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flow-canvas" id="flowCanvas">
+                                <div class="canvas-grid"></div>
+                                <!-- Sample nodes will be added here -->
+                                <div class="flow-node start-node" style="top: 100px; left: 200px;" data-node-id="start-1">
+                                    <div class="node-header">
+                                        <span class="node-icon">🚀</span>
+                                        <span class="node-title">Conversation Start</span>
+                                        <button class="node-delete" onclick="deleteNode('start-1')">×</button>
+                                    </div>
+                                    <div class="node-content">
+                                        <p>Entry point for all conversations</p>
+                                    </div>
+                                    <div class="node-ports">
+                                        <div class="port output-port" data-port="output"></div>
+                                    </div>
+                                </div>
+
+                                <div class="flow-node message-node" style="top: 100px; left: 500px;" data-node-id="welcome-1">
+                                    <div class="node-header">
+                                        <span class="node-icon">💬</span>
+                                        <span class="node-title">Welcome Message</span>
+                                        <button class="node-delete" onclick="deleteNode('welcome-1')">×</button>
+                                    </div>
+                                    <div class="node-content">
+                                        <textarea class="node-input" placeholder="Enter message text...">Welcome to ADTU! How can I help you today?</textarea>
+                                    </div>
+                                    <div class="node-ports">
+                                        <div class="port input-port" data-port="input"></div>
+                                        <div class="port output-port" data-port="output"></div>
+                                    </div>
+                                </div>
+
+                                <div class="flow-node quick-replies-node" style="top: 300px; left: 500px;" data-node-id="quick-1">
+                                    <div class="node-header">
+                                        <span class="node-icon">⚡</span>
+                                        <span class="node-title">Quick Replies</span>
+                                        <button class="node-delete" onclick="deleteNode('quick-1')">×</button>
+                                    </div>
+                                    <div class="node-content">
+                                        <div class="quick-reply-options">
+                                            <input type="text" class="node-input" placeholder="Option 1" value="Admissions">
+                                            <input type="text" class="node-input" placeholder="Option 2" value="Academics">
+                                            <input type="text" class="node-input" placeholder="Option 3" value="Campus Life">
+                                            <button class="btn btn--outline btn--sm">+ Add Option</button>
+                                        </div>
+                                    </div>
+                                    <div class="node-ports">
+                                        <div class="port input-port" data-port="input"></div>
+                                        <div class="port output-port" data-port="admissions"></div>
+                                        <div class="port output-port" data-port="academics"></div>
+                                        <div class="port output-port" data-port="campus"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flow-properties">
+                                <h4>Properties</h4>
+                                <div class="property-panel" id="propertyPanel">
+                                    <p class="empty-state">Select a node to edit its properties</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics View -->
+                <div class="view" id="analytics-view">
+                    <div class="analytics-container">
+                        <div class="analytics-header">
+                            <h2>Analytics Dashboard</h2>
+                            <div class="analytics-filters">
+                                <select class="form-control">
+                                    <option>Last 7 days</option>
+                                    <option>Last 30 days</option>
+                                    <option>Last 3 months</option>
+                                </select>
+                                <button class="btn btn--outline btn--sm">
+                                    <span>📊</span> Export Report
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="analytics-grid">
+                            <div class="analytics-card">
+                                <h3>Intent Performance</h3>
+                                <div class="chart-container" style="position: relative; height: 250px;">
+                                    <canvas id="intentChart"></canvas>
+                                </div>
+                            </div>
+
+                            <div class="analytics-card">
+                                <h3>User Satisfaction</h3>
+                                <div class="chart-container" style="position: relative; height: 250px;">
+                                    <canvas id="satisfactionChart"></canvas>
+                                </div>
+                            </div>
+
+                            <div class="analytics-card">
+                                <h3>Conversation Funnels</h3>
+                                <div class="funnel-stats">
+                                    <div class="funnel-step">
+                                        <span class="step-label">Started Conversations</span>
+                                        <span class="step-value">1,247</span>
+                                        <div class="step-bar">
+                                            <div class="step-fill" style="width: 100%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="funnel-step">
+                                        <span class="step-label">Engaged Users</span>
+                                        <span class="step-value">1,089</span>
+                                        <div class="step-bar">
+                                            <div class="step-fill" style="width: 87%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="funnel-step">
+                                        <span class="step-label">Completed Conversations</span>
+                                        <span class="step-value">892</span>
+                                        <div class="step-bar">
+                                            <div class="step-fill" style="width: 71%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="funnel-step">
+                                        <span class="step-label">Problem Resolved</span>
+                                        <span class="step-value">756</span>
+                                        <div class="step-bar">
+                                            <div class="step-fill" style="width: 60%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="analytics-card">
+                                <h3>Response Time Distribution</h3>
+                                <div class="chart-container" style="position: relative; height: 250px;">
+                                    <canvas id="responseTimeChart"></canvas>
+                                </div>
+                            </div>
+
+                            <div class="analytics-card full-width">
+                                <h3>Popular Topics</h3>
+                                <div class="topic-table">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Intent</th>
+                                                <th>Queries</th>
+                                                <th>Success Rate</th>
+                                                <th>Avg. Confidence</th>
+                                                <th>Trend</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>academic.registration</td>
+                                                <td>234</td>
+                                                <td><span class="status status--success">96%</span></td>
+                                                <td>98%</td>
+                                                <td><span class="trend-indicator positive">↗️ +12%</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>fees.payment</td>
+                                                <td>187</td>
+                                                <td><span class="status status--success">94%</span></td>
+                                                <td>94%</td>
+                                                <td><span class="trend-indicator positive">↗️ +8%</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>hostel.accommodation</td>
+                                                <td>156</td>
+                                                <td><span class="status status--warning">88%</span></td>
+                                                <td>92%</td>
+                                                <td><span class="trend-indicator neutral">→ 0%</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Views (Simplified for brevity) -->
+                <div class="view" id="content-management-view">
+                    <div class="content-management-container">
+                        <h2>Content Management</h2>
+                        <p class="view-description">Manage your bot's responses, FAQ entries, and rich content templates.</p>
+                        <div class="placeholder-content">
+                            <div class="feature-card">
+                                <h3>🎴 Rich Message Templates</h3>
+                                <p>Create and manage card, carousel, and list templates</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3>❓ FAQ Management</h3>
+                                <p>Organize frequently asked questions and responses</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3>📚 Content Library</h3>
+                                <p>Store and organize media files, documents, and resources</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="view" id="knowledge-base-view">
+                    <div class="knowledge-base-container">
+                        <h2>ADTU Knowledge Base</h2>
+                        <p class="view-description">Comprehensive repository of ADTU-specific information and procedures.</p>
+                        <div class="knowledge-sections">
+                            <div class="knowledge-section">
+                                <h3>🏫 Campus Information</h3>
+                                <div class="knowledge-items">
+                                    <div class="knowledge-item">Office Hours & Timings</div>
+                                    <div class="knowledge-item">Campus Map & Directions</div>
+                                    <div class="knowledge-item">Facility Locations</div>
+                                </div>
+                            </div>
+                            <div class="knowledge-section">
+                                <h3>📚 Academic Procedures</h3>
+                                <div class="knowledge-items">
+                                    <div class="knowledge-item">Course Registration Process</div>
+                                    <div class="knowledge-item">Grading System</div>
+                                    <div class="knowledge-item">Exam Schedules</div>
+                                </div>
+                            </div>
+                            <div class="knowledge-section">
+                                <h3>🏠 Student Services</h3>
+                                <div class="knowledge-items">
+                                    <div class="knowledge-item">Hostel Accommodation</div>
+                                    <div class="knowledge-item">Fee Payment Methods</div>
+                                    <div class="knowledge-item">ID Card Services</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="view" id="testing-view">
+                    <div class="testing-container">
+                        <h2>Bot Testing Environment</h2>
+                        <div class="testing-workspace">
+                            <div class="test-console">
+                                <h3>Test Console</h3>
+                                <div class="test-messages" id="testMessages">
+                                    <div class="test-message bot">
+                                        <strong>Bot:</strong> Welcome to ADTU! How can I help you today?
+                                    </div>
+                                </div>
+                                <div class="test-input-container">
+                                    <input type="text" class="test-input" id="testInput" placeholder="Type a test message...">
+                                    <button class="btn btn--primary" onclick="sendTestMessage()">Send</button>
+                                </div>
+                            </div>
+                            <div class="test-results">
+                                <h3>Test Results</h3>
+                                <div class="test-metrics">
+                                    <div class="test-metric">
+                                        <span class="metric-label">Intent Recognition</span>
+                                        <span class="metric-value">94% accuracy</span>
+                                    </div>
+                                    <div class="test-metric">
+                                        <span class="metric-label">Response Time</span>
+                                        <span class="metric-value">1.2s average</span>
+                                    </div>
+                                    <div class="test-metric">
+                                        <span class="metric-label">Flow Coverage</span>
+                                        <span class="metric-value">87% paths tested</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="view" id="live-chat-view">
+                    <div class="live-chat-container">
+                        <h2>Live Chat Monitor</h2>
+                        <div class="chat-dashboard">
+                            <div class="active-conversations">
+                                <h3>Active Conversations (3)</h3>
+                                <div class="conversation-list">
+                                    <div class="conversation-item active">
+                                        <div class="user-avatar">S</div>
+                                        <div class="conversation-info">
+                                            <span class="user-name">Student #234</span>
+                                            <span class="last-message">Asking about hostel facilities...</span>
+                                            <span class="conversation-time">2 min ago</span>
+                                        </div>
+                                        <div class="conversation-status urgent">Needs Help</div>
+                                    </div>
+                                    <div class="conversation-item">
+                                        <div class="user-avatar">A</div>
+                                        <div class="conversation-info">
+                                            <span class="user-name">Student #235</span>
+                                            <span class="last-message">Course registration query...</span>
+                                            <span class="conversation-time">5 min ago</span>
+                                        </div>
+                                        <div class="conversation-status resolved">Bot Handled</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="view" id="integrations-view">
+                    <div class="integrations-container">
+                        <h2>System Integrations</h2>
+                        <div class="integrations-grid">
+                            <div class="integration-card connected">
+                                <div class="integration-header">
+                                    <h3>🔗 ADTU Student Portal</h3>
+                                    <span class="integration-status connected">Connected</span>
+                                </div>
+                                <p>REST API integration for student data and enrollment</p>
+                                <div class="integration-endpoints">
+                                    <span class="endpoint">Authentication</span>
+                                    <span class="endpoint">Enrollment</span>
+                                    <span class="endpoint">Grades</span>
+                                </div>
+                            </div>
+                            <div class="integration-card connected">
+                                <div class="integration-header">
+                                    <h3>🔥 Firebase Database</h3>
+                                    <span class="integration-status connected">Connected</span>
+                                </div>
+                                <p>Real-time database for conversations and analytics</p>
+                                <div class="integration-endpoints">
+                                    <span class="endpoint">Conversations</span>
+                                    <span class="endpoint">Users</span>
+                                    <span class="endpoint">Analytics</span>
+                                </div>
+                            </div>
+                            <div class="integration-card">
+                                <div class="integration-header">
+                                    <h3>📧 Email Service</h3>
+                                    <span class="integration-status available">Available</span>
+                                </div>
+                                <p>Send automated emails and notifications</p>
+                                <button class="btn btn--outline btn--sm">Configure</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="view" id="settings-view">
+                    <div class="settings-container">
+                        <h2>Platform Settings</h2>
+                        <div class="settings-sections">
+                            <div class="settings-section">
+                                <h3>🤖 Bot Configuration</h3>
+                                <div class="form-group">
+                                    <label class="form-label">Bot Name</label>
+                                    <input type="text" class="form-control" value="ADTU AI Assistant">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Default Language</label>
+                                    <select class="form-control">
+                                        <option>English</option>
+                                        <option>Assamese</option>
+                                        <option>Hindi</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="settings-section">
+                                <h3>🔒 Security & Privacy</h3>
+                                <div class="form-group">
+                                    <label class="form-label">Data Retention (days)</label>
+                                    <input type="number" class="form-control" value="365">
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" checked> Enable conversation logging
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" checked> GDPR compliance mode
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Live Chat Widget (for testing bot) -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="widget-header" onclick="toggleChatWidget()">
+            <span>🤖 ADTU Bot</span>
+            <button class="widget-toggle">💬</button>
+        </div>
+        <div class="widget-content hidden">
+            <div class="widget-messages" id="widgetMessages">
+                <div class="widget-message bot">Welcome! How can I help you today?</div>
+            </div>
+            <div class="widget-input-container">
+                <input type="text" class="widget-input" id="widgetInput" placeholder="Type your message...">
+                <button class="widget-send" onclick="sendWidgetMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
